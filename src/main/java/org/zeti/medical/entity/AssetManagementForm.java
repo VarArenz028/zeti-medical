@@ -1,18 +1,20 @@
 package org.zeti.medical.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "ActionPlan")
+@Table(name = "asset_management_form")
 @DynamicInsert
 @DynamicUpdate
-public class AssetManagementForm implements Serializable
+public class AssetManagementForm
 {
     @Id
     @Column(name = "assetMgtID",
@@ -21,30 +23,39 @@ public class AssetManagementForm implements Serializable
     private Integer assetMgtID;
 
     @Column(name = "dateCreated",
-            nullable = false,
             updatable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @CreationTimestamp
     private LocalDate dateCreated;
 
-    @Column(name = "dateUpdated",
-            nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @Column(name = "dateUpdated")
+    @UpdateTimestamp
     private LocalDate dateUpdated;
 
     @OneToOne(fetch = FetchType.LAZY,
-            mappedBy = "assetManagementForm",
-            cascade = CascadeType.ALL)
+              orphanRemoval = false,
+              mappedBy = "assetManagementForm")
+//    @JoinColumn(name = "assetMgtID",
+//            foreignKey = @ForeignKey(name = "assetMgtID"))
     private Assessment assessment;
 
     @OneToOne(fetch = FetchType.LAZY,
-            mappedBy = "assetManagementForm",
-            cascade = CascadeType.ALL)
+              orphanRemoval = false,
+              mappedBy = "assetManagementForm")
+//    @JoinColumn(name = "assetMgtID",
+//            foreignKey = @ForeignKey(name = "assetMgtID"))
     private Management management;
 
     @OneToOne(fetch = FetchType.LAZY,
-            mappedBy = "assetManagementForm",
-            cascade = CascadeType.ALL)
+              cascade = CascadeType.ALL,
+              orphanRemoval = false,
+              mappedBy = "assetManagementForm")
+//    @JoinColumn(name = "assetMgtID",
+//                foreignKey = @ForeignKey(name = "assetMgtID"))
     private Disposition disposition;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    private Patient patient;
 
     public AssetManagementForm() {
     }
@@ -57,6 +68,16 @@ public class AssetManagementForm implements Serializable
         this.management = management;
         this.disposition = disposition;
     }
+
+//    public AssetManagementForm(Integer assetMgtID, LocalDate dateCreated, LocalDate dateUpdated, Assessment assessment, Management management, Disposition disposition, Patient patient) {
+//        this.assetMgtID = assetMgtID;
+//        this.dateCreated = dateCreated;
+//        this.dateUpdated = dateUpdated;
+//        this.assessment = assessment;
+//        this.management = management;
+//        this.disposition = disposition;
+//        this.patient = patient;
+//    }
 
     public Integer getAssetMgtID() {
         return assetMgtID;
@@ -104,5 +125,13 @@ public class AssetManagementForm implements Serializable
 
     public void setDisposition(Disposition disposition) {
         this.disposition = disposition;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 }

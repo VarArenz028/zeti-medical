@@ -4,10 +4,11 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "ObstetricalHistory")
+@Table(name = "obstetrical_history")
 @DynamicInsert
 @DynamicUpdate
 public class ObstetricalHistory implements Serializable
@@ -21,22 +22,26 @@ public class ObstetricalHistory implements Serializable
 
     @Column(name = "gravida",
             length = 20)
+    @Size(max = 20, message = "{validation.ob.number.size}")
     private String gravida;
 
     @Column(name = "para",
             length = 20)
+    @Size(max = 20, message = "{validation.ob.number.size}")
     private String para;
 
     @Column(name = "tpal",
             length = 20)
+    @Size(max = 20, message = "{validation.ob.number.size}")
     private String tpal;
 
     @Column(name = "note",
             length = 512)
+    @Size(max = 512, message = "{validation.note.number.size}")
     private String note;
 
     @OneToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+              cascade = CascadeType.ALL)
     private Patient patient;
 
     public ObstetricalHistory() {
@@ -48,15 +53,6 @@ public class ObstetricalHistory implements Serializable
         this.para = para;
         this.tpal = tpal;
         this.note = note;
-    }
-
-    public ObstetricalHistory(Integer obsHistoryID, String gravida, String para, String tpal, String note, Patient patient) {
-        this.obsHistoryID = obsHistoryID;
-        this.gravida = gravida;
-        this.para = para;
-        this.tpal = tpal;
-        this.note = note;
-        this.patient = patient;
     }
 
     public Integer getObsHistoryID() {

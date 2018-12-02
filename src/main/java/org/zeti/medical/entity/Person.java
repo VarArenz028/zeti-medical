@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -14,26 +18,32 @@ public abstract class Person implements Serializable
     @Column(name = "lastName",
             nullable = false,
             length = 80)
+    @Size(min = 5, max = 80, message = "{validation.name.number.size}")
     private String lastName;
 
     @Column(name = "firstName",
             nullable = false,
             length = 80)
+    @Size(min = 5, max = 80, message = "{validation.name.number.size}")
     private String firstName;
 
     @Column(name = "middleInitial",
             nullable = true,
             length = 5)
+    @Size(min = 1, max = 5, message = "{validation.midinitial.number.size}")
     private String middleInitial;
 
     @Column(name = "age",
             nullable = false,
             length = 120)
+
+    @PositiveOrZero(message = "{validation.positive.age}")
     private Integer age;
 
     @Column(name = "birthDate",
             nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @Past(message = "{validation.past.birthdate}")
     private LocalDate birthDate;
 
     public Person() {

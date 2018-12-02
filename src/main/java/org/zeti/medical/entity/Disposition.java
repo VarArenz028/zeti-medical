@@ -1,13 +1,15 @@
 package org.zeti.medical.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "MedicalHistory")
+@Table(name = "disposition")
 @DynamicInsert
 @DynamicUpdate
 public class Disposition implements Serializable
@@ -21,10 +23,10 @@ public class Disposition implements Serializable
 
     @Column(name = "dispositionNote",
             length = 512)
+    @Size(max = 512, message = "{validation.note.number.size}")
     private String dispositionNote;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     private AssetManagementForm assetManagementForm;
 
     public Disposition() {
@@ -33,12 +35,6 @@ public class Disposition implements Serializable
     public Disposition(Integer dispositionID, String dispositionNote) {
         this.dispositionID = dispositionID;
         this.dispositionNote = dispositionNote;
-    }
-
-    public Disposition(Integer dispositionID, String dispositionNote, AssetManagementForm assetManagementForm) {
-        this.dispositionID = dispositionID;
-        this.dispositionNote = dispositionNote;
-        this.assetManagementForm = assetManagementForm;
     }
 
     public Integer getDispositionID() {

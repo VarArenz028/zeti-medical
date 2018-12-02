@@ -1,10 +1,15 @@
 package org.zeti.medical.entity;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -14,6 +19,7 @@ import java.util.Set;
 @Table(name = "Patient")
 @DynamicInsert
 @DynamicUpdate
+@JsonFilter("PatientFilter")
 public class Patient extends Person implements Serializable
 {
 
@@ -25,67 +31,95 @@ public class Patient extends Person implements Serializable
 
     @Column(name = "contactNumber",
             length = 30)
+    @Size(max = 30, message = "{validation.contact.number.size}")
     private String contactNumber;
 
     @Column(name = "civilStatus",
             length = 20)
+    @Size(max = 20, message = "{validation.civil.number.size}")
     private String civilStatus;
 
     @Column(name = "religion",
             length = 80)
+    @Size(max = 80, message = "{validation.religion.number.size}")
     private String religion;
 
     @Column(name = "address",
             length = 150)
+    @Size(max = 150, message = "{validation.address.number.size}")
     private String address;
 
     //Educational Attainment
     @Column(name = "eduAttainment",
             length = 100)
+    @Size(max = 100, message = "{validation.education.number.size}")
     private String eduAttainment;
 
     @Column(name = "lmp",
             length = 50)
+    @Size(max = 100, message = "{validation.lmp.number.size}")
     private String lmp;
 
     @Column(name = "aog",
             length = 50)
+    @Size(max = 100, message = "{validation.education.number.size}")
     private String aog;
 
     @Column(name = "edc",
             length = 50)
+    @Size(max = 100, message = "{validation.education.number.size}")
     private String edc;
 
     @Column(name = "dateCreated",
             nullable = false,
             updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @CreationTimestamp
     private LocalDate dateCreated;
 
     @Column(name = "dateUpdated",
             nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @UpdateTimestamp
     private LocalDate dateUpdated;
 
     @OneToOne(fetch = FetchType.LAZY,
-              mappedBy = "patient",
               cascade = CascadeType.ALL)
+    @JoinColumn(name = "patientID",
+                foreignKey = @ForeignKey(name = "patientID"))
     private ObstetricalHistory obstetricalHistory;
 
     @OneToOne(fetch = FetchType.LAZY,
-            mappedBy = "patient",
             cascade = CascadeType.ALL)
+    @JoinColumn(name = "patientID",
+                foreignKey = @ForeignKey(name = "patientID"))
     private MedicalHistory medicalHistory;
 
-    @OneToMany(mappedBy = "patient",
-               cascade = CascadeType.ALL,
-               fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patientID",
+                foreignKey = @ForeignKey(name = "patientID"))
+    @JsonManagedReference
     private Set<AssetManagementForm> assetManagementForms = new LinkedHashSet<>();
 
     public Patient() {
     }
 
     public Patient(Integer patientID, String contactNumber, String civilStatus, String religion, String address, String eduAttainment, String lmp, String aog, String edc, LocalDate dateCreated, LocalDate dateUpdated) {
+        this.patientID = patientID;
+        this.contactNumber = contactNumber;
+        this.civilStatus = civilStatus;
+        this.religion = religion;
+        this.address = address;
+        this.eduAttainment = eduAttainment;
+        this.lmp = lmp;
+        this.aog = aog;
+        this.edc = edc;
+        this.dateCreated = dateCreated;
+        this.dateUpdated = dateUpdated;
+    }
+
+    public Patient(String lastName, String firstName, String middleInitial, Integer age, LocalDate birthDate, Integer patientID, @Size(max = 30, message = "{validation.contact.number.size}") String contactNumber, @Size(max = 20, message = "{validation.civil.number.size}") String civilStatus, @Size(max = 80, message = "{validation.religion.number.size}") String religion, @Size(max = 150, message = "{validation.address.number.size}") String address, @Size(max = 100, message = "{validation.education.number.size}") String eduAttainment, @Size(max = 100, message = "{validation.lmp.number.size}") String lmp, @Size(max = 100, message = "{validation.education.number.size}") String aog, @Size(max = 100, message = "{validation.education.number.size}") String edc, LocalDate dateCreated, LocalDate dateUpdated) {
+        super(lastName, firstName, middleInitial, age, birthDate);
         this.patientID = patientID;
         this.contactNumber = contactNumber;
         this.civilStatus = civilStatus;
@@ -220,5 +254,29 @@ public class Patient extends Person implements Serializable
 
     public void setDateUpdated(LocalDate dateUpdated) {
         this.dateUpdated = dateUpdated;
+    }
+
+    public ObstetricalHistory getObstetricalHistory() {
+        return obstetricalHistory;
+    }
+
+    public void setObstetricalHistory(ObstetricalHistory obstetricalHistory) {
+        this.obstetricalHistory = obstetricalHistory;
+    }
+
+    public MedicalHistory getMedicalHistory() {
+        return medicalHistory;
+    }
+
+    public void setMedicalHistory(MedicalHistory medicalHistory) {
+        this.medicalHistory = medicalHistory;
+    }
+
+    public Set<AssetManagementForm> getAssetManagementForms() {
+        return assetManagementForms;
+    }
+
+    public void setAssetManagementForms(Set<AssetManagementForm> assetManagementForms) {
+        this.assetManagementForms = assetManagementForms;
     }
 }

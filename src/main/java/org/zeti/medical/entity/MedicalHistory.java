@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "MedicalHistory")
+@Table(name = "medical_history")
 @DynamicInsert
 @DynamicUpdate
 public class MedicalHistory implements Serializable
@@ -51,7 +51,7 @@ public class MedicalHistory implements Serializable
     private String tetToxHistory;
 
     @OneToOne(fetch = FetchType.LAZY,
-              cascade = CascadeType.ALL)
+            cascade = CascadeType.ALL)
     private Patient patient;
 
     public MedicalHistory() {
@@ -66,18 +66,6 @@ public class MedicalHistory implements Serializable
         this.socialHistory = socialHistory;
         this.allergyHistory = allergyHistory;
         this.tetToxHistory = tetToxHistory;
-    }
-
-    public MedicalHistory(Integer medicalHistoryID, String menstrualHistory, String famMedHistory, String pastMedHistory, String famPlanHistory, String socialHistory, String allergyHistory, String tetToxHistory, Patient patient) {
-        this.medicalHistoryID = medicalHistoryID;
-        this.menstrualHistory = menstrualHistory;
-        this.famMedHistory = famMedHistory;
-        this.pastMedHistory = pastMedHistory;
-        this.famPlanHistory = famPlanHistory;
-        this.socialHistory = socialHistory;
-        this.allergyHistory = allergyHistory;
-        this.tetToxHistory = tetToxHistory;
-        this.patient = patient;
     }
 
     public Integer getMedicalHistoryID() {

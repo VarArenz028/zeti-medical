@@ -1,5 +1,6 @@
 package org.zeti.medical.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -9,7 +10,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Table(name = "Management")
+@Table(name = "management")
 @DynamicInsert
 @DynamicUpdate
 public class Management implements Serializable
@@ -20,27 +21,20 @@ public class Management implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer managementID;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private AssetManagementForm assetManagementForm;
-
-    @OneToMany(mappedBy = "management",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL,
+               fetch = FetchType.LAZY)
+    @JoinColumn(name = "managementID",
+                foreignKey = @ForeignKey(name = "managementID"))
     private Set<ActionPlan> actionPlans;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private AssetManagementForm assetManagementForm;
 
     public Management() {
     }
 
     public Management(Integer managementID, Set<ActionPlan> actionPlans) {
         this.managementID = managementID;
-        this.actionPlans = actionPlans;
-    }
-
-    public Management(Integer managementID, AssetManagementForm assetManagementForm, Set<ActionPlan> actionPlans) {
-        this.managementID = managementID;
-        this.assetManagementForm = assetManagementForm;
         this.actionPlans = actionPlans;
     }
 

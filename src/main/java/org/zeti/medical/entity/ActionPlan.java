@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "ActionPlan")
+@Table(name = "action_plan")
 @DynamicInsert
 @DynamicUpdate
 public class ActionPlan implements Serializable
@@ -27,11 +27,6 @@ public class ActionPlan implements Serializable
             length = 50)
     private String action;
 
-    @ManyToOne(fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL)
-    @JsonBackReference
-    private Management management;
-
     public ActionPlan() {
     }
 
@@ -39,13 +34,6 @@ public class ActionPlan implements Serializable
         this.actionPlanID = actionPlanID;
         this.actionName = actionName;
         this.action = action;
-    }
-
-    public ActionPlan(Integer actionPlanID, String actionName, String action, Management management) {
-        this.actionPlanID = actionPlanID;
-        this.actionName = actionName;
-        this.action = action;
-        this.management = management;
     }
 
     public Integer getActionPlanID() {
@@ -70,13 +58,5 @@ public class ActionPlan implements Serializable
 
     public void setAction(String action) {
         this.action = action;
-    }
-
-    public Management getManagement() {
-        return management;
-    }
-
-    public void setManagement(Management management) {
-        this.management = management;
     }
 }

@@ -1,13 +1,15 @@
 package org.zeti.medical.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "Assessment")
+@Table(name = "assessment")
 @DynamicInsert
 @DynamicUpdate
 public class Assessment implements Serializable
@@ -21,38 +23,45 @@ public class Assessment implements Serializable
 
     @Column(name = "wt",
             length = 50)
+    @Size(min = 2, max = 50, message = "{validation.assessment.number.size}")
     private String wt;
 
     @Column(name = "fh",
             length = 50)
+    @Size(max = 50, message = "{validation.assessment.number.size}")
     private String fh;
 
     @Column(name = "fht",
             length = 50)
+    @Size(max = 50, message = "{validation.assessment.number.size}")
     private String fht;
 
     @Column(name = "temp",
             length = 50)
+    @Size(max = 50, message = "{validation.assessment.number.size}")
     private String temp;
 
     @Column(name = "rr",
             length = 50)
+    @Size(max = 50, message = "{validation.assessment.number.size}")
     private String rr;
 
     @Column(name = "pr",
             length = 50)
+    @Size(max = 50, message = "{validation.assessment.number.size}")
     private String pr;
 
     @Column(name = "sig",
             length = 50)
+    @Size(max = 50, message = "{validation.assessment.number.size}")
     private String sig;
 
     @Column(name = "note",
             length = 512)
+    @Size(max = 512, message = "{validation.note.number.size}")
     private String note;
 
-    @OneToOne(fetch = FetchType.LAZY,
-              cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     private AssetManagementForm assetManagementForm;
 
     public Assessment() {
@@ -68,19 +77,6 @@ public class Assessment implements Serializable
         this.pr = pr;
         this.sig = sig;
         this.note = note;
-    }
-
-    public Assessment(Integer assessmentID, String wt, String fh, String fht, String temp, String rr, String pr, String sig, String note, AssetManagementForm assetManagementForm) {
-        this.assessmentID = assessmentID;
-        this.wt = wt;
-        this.fh = fh;
-        this.fht = fht;
-        this.temp = temp;
-        this.rr = rr;
-        this.pr = pr;
-        this.sig = sig;
-        this.note = note;
-        this.assetManagementForm = assetManagementForm;
     }
 
     public Integer getAssessmentID() {
