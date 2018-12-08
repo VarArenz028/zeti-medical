@@ -10,18 +10,18 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-public class JSONFilter
+public class JsonFilter
 {
-    public <T> MappingJacksonValue filterList(String filterName, Set<String> fields, List<T> list)
+    public MappingJacksonValue filterResponse(String filterName, Set<String> fields, List<Object> list)
     {
         SimpleBeanPropertyFilter propertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept(fields);
-        FilterProvider filterProvider = new SimpleFilterProvider().addFilter("filterName", propertyFilter);
+        FilterProvider filterProvider = new SimpleFilterProvider().addFilter(filterName, propertyFilter);
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(list);
         mappingJacksonValue.setFilters(filterProvider);
         return mappingJacksonValue;
     }
 
-    public MappingJacksonValue filter(String filterName, Set<String> fields, Object object)
+    public MappingJacksonValue filterResponse(String filterName, Set<String> fields, Object object)
     {
         SimpleBeanPropertyFilter propertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept(fields);
         FilterProvider filterProvider = new SimpleFilterProvider().addFilter(filterName, propertyFilter);

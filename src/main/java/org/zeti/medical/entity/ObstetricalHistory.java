@@ -2,6 +2,7 @@ package org.zeti.medical.entity;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 @Table(name = "obstetrical_history")
 @DynamicInsert
 @DynamicUpdate
+@Where(clause = "is_deleted = false")
 public class ObstetricalHistory implements Serializable
 {
 
@@ -40,8 +42,13 @@ public class ObstetricalHistory implements Serializable
     @Size(max = 512, message = "{validation.note.number.size}")
     private String note;
 
+    @Column(name = "isDeleted",
+            nullable = false)
+    private Boolean isDeleted = false;
+
     @OneToOne(fetch = FetchType.LAZY,
               cascade = CascadeType.ALL)
+    @JoinColumn(name = "patientID")
     private Patient patient;
 
     public ObstetricalHistory() {
@@ -93,6 +100,14 @@ public class ObstetricalHistory implements Serializable
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 
     public Patient getPatient() {

@@ -47,6 +47,33 @@ public class PatientRepositoryImpl extends AbstractEntityManager implements Pati
         return patient;
     }
 
+    @Override
+    public List<Patient> findAllPatient()
+    {
+
+        EntityGraph<Patient> entityGraph = entityManager().createEntityGraph(Patient.class);
+        CriteriaQuery<Patient> criteriaQuery = criteriaBuilder().createQuery(Patient.class);
+        Root<Patient> root = criteriaQuery.from(Patient.class);
+        criteriaQuery.select(criteriaBuilder().construct(Patient.class, root.get("lastName"), root.get("firstName"),
+                root.get("middleInitial"), root.get("age"), root.get("birthDate"),
+                root.get("patientID"), root.get("contactNumber"), root.get("civilStatus"),
+                root.get("religion"), root.get("address"), root.get("eduAttainment"), root.get("lmp"),
+                root.get("aog"), root.get("edc"), root.get("dateCreated"), root.get("dateUpdated")));
+
+        TypedQuery typedQuery = entityManager()
+                .createQuery(criteriaQuery)
+                .setHint("javax.persistence.loadgraph", entityGraph);
+
+        List<Patient> patients = typedQuery.getResultList();
+
+        if(patients.isEmpty())
+        {
+            throw new ResourceNotFound("No result found");
+        }
+
+        return patients;
+    }
+
     // to get total page number
     private Integer getLastPageNumber(long recordCount, int pageSize)
     {

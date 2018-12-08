@@ -3,10 +3,12 @@ package org.zeti.medical.entity;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -15,11 +17,14 @@ import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+
 @Entity
 @Table(name = "Patient")
 @DynamicInsert
 @DynamicUpdate
+@JsonRootName("Patient")
 @JsonFilter("PatientFilter")
+@Where(clause = "is_deleted = false")
 public class Patient extends Person implements Serializable
 {
 
@@ -83,39 +88,28 @@ public class Patient extends Person implements Serializable
     @UpdateTimestamp
     private LocalDate dateUpdated;
 
+    @Column(name = "isDeleted",
+            columnDefinition = "bit",
+            nullable = false)
+    private boolean isDeleted = false;
+
     @OneToOne(fetch = FetchType.LAZY,
-              cascade = CascadeType.ALL)
-    @JoinColumn(name = "patientID",
-                foreignKey = @ForeignKey(name = "patientID"))
+              cascade = CascadeType.ALL,
+              mappedBy = "patient")
     private ObstetricalHistory obstetricalHistory;
 
     @OneToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    @JoinColumn(name = "patientID",
-                foreignKey = @ForeignKey(name = "patientID"))
+              cascade = CascadeType.ALL,
+              mappedBy = "patient")
     private MedicalHistory medicalHistory;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patientID",
-                foreignKey = @ForeignKey(name = "patientID"))
+    @OneToMany(fetch = FetchType.LAZY,
+               mappedBy = "patient")
     @JsonManagedReference
     private Set<AssetManagementForm> assetManagementForms = new LinkedHashSet<>();
 
-    public Patient() {
-    }
 
-    public Patient(Integer patientID, String contactNumber, String civilStatus, String religion, String address, String eduAttainment, String lmp, String aog, String edc, LocalDate dateCreated, LocalDate dateUpdated) {
-        this.patientID = patientID;
-        this.contactNumber = contactNumber;
-        this.civilStatus = civilStatus;
-        this.religion = religion;
-        this.address = address;
-        this.eduAttainment = eduAttainment;
-        this.lmp = lmp;
-        this.aog = aog;
-        this.edc = edc;
-        this.dateCreated = dateCreated;
-        this.dateUpdated = dateUpdated;
+    public Patient() {
     }
 
     public Patient(String lastName, String firstName, String middleInitial, Integer age, LocalDate birthDate, Integer patientID, @Size(max = 30, message = "{validation.contact.number.size}") String contactNumber, @Size(max = 20, message = "{validation.civil.number.size}") String civilStatus, @Size(max = 80, message = "{validation.religion.number.size}") String religion, @Size(max = 150, message = "{validation.address.number.size}") String address, @Size(max = 100, message = "{validation.education.number.size}") String eduAttainment, @Size(max = 100, message = "{validation.lmp.number.size}") String lmp, @Size(max = 100, message = "{validation.education.number.size}") String aog, @Size(max = 100, message = "{validation.education.number.size}") String edc, LocalDate dateCreated, LocalDate dateUpdated) {
@@ -254,6 +248,14 @@ public class Patient extends Person implements Serializable
 
     public void setDateUpdated(LocalDate dateUpdated) {
         this.dateUpdated = dateUpdated;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public ObstetricalHistory getObstetricalHistory() {

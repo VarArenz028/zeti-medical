@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Table(name = "management")
 @DynamicInsert
 @DynamicUpdate
+@Where(clause = "is_deleted = false")
 public class Management implements Serializable
 {
     @Id
@@ -21,13 +23,18 @@ public class Management implements Serializable
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer managementID;
 
-    @OneToMany(cascade = CascadeType.ALL,
-               fetch = FetchType.LAZY)
-    @JoinColumn(name = "managementID",
-                foreignKey = @ForeignKey(name = "managementID"))
+    @Column(name = "isDeleted",
+            nullable = false)
+    private Boolean isDeleted = false;
+
+    @OneToMany(cascade = CascadeType.PERSIST,
+               fetch = FetchType.LAZY,
+               mappedBy = "management")
     private Set<ActionPlan> actionPlans;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,
+              cascade = CascadeType.ALL)
+    @JoinColumn(name = "assetMgtID")
     private AssetManagementForm assetManagementForm;
 
     public Management() {
@@ -44,6 +51,14 @@ public class Management implements Serializable
 
     public void setManagementID(Integer managementID) {
         this.managementID = managementID;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 
     public Set<ActionPlan> getActionPlans() {

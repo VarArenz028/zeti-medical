@@ -10,9 +10,27 @@ import java.util.Set;
 @Component
 public class PatientView
 {
-    private Set<String> patientFields = new HashSet<>(Arrays.asList("patientID", "lastName"));
+    private Set<String> patientFields;
 
-    public Set<String> getPatientFields() {
-        return patientFields;
+    public Set<String> getPatientFields()
+    {
+        return patientFields = new HashSet<>(Arrays.asList(
+                "patientID",
+                "lastName",
+                "firstName",
+                "middleInitial",
+                "age",
+                "birthDate",
+                "contactNumber",
+                "civilStatus",
+                "religion",
+                "address",
+                "eduAttainment",
+                "lmp",
+                "aog",
+                "edc",
+                "dateCreated",
+                "dateUpdated"
+        ));
     }
 }

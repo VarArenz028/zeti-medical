@@ -3,6 +3,7 @@ package org.zeti.medical.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 @Table(name = "action_plan")
 @DynamicInsert
 @DynamicUpdate
+@Where(clause = "is_deleted = false")
 public class ActionPlan implements Serializable
 {
     @Id
@@ -27,13 +29,23 @@ public class ActionPlan implements Serializable
             length = 50)
     private String action;
 
+    @Column(name = "isDeleted",
+            nullable = false)
+    private Boolean isDeleted = false;
+
+    @ManyToOne(cascade = CascadeType.ALL,
+               fetch = FetchType.LAZY)
+    @JoinColumn(name = "managementID")
+    private Management management;
+
     public ActionPlan() {
     }
 
-    public ActionPlan(Integer actionPlanID, String actionName, String action) {
+    public ActionPlan(Integer actionPlanID, String actionName, String action, Boolean isDeleted) {
         this.actionPlanID = actionPlanID;
         this.actionName = actionName;
         this.action = action;
+        this.isDeleted = isDeleted;
     }
 
     public Integer getActionPlanID() {
@@ -58,5 +70,21 @@ public class ActionPlan implements Serializable
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Management getManagement() {
+        return management;
+    }
+
+    public void setManagement(Management management) {
+        this.management = management;
     }
 }

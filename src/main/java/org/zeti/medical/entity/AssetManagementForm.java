@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Table(name = "asset_management_form")
 @DynamicInsert
 @DynamicUpdate
+@Where(clause = "is_deleted = false")
 public class AssetManagementForm
 {
     @Id
@@ -31,29 +33,27 @@ public class AssetManagementForm
     @UpdateTimestamp
     private LocalDate dateUpdated;
 
+    @Column(name = "isDeleted",
+            nullable = false)
+    private Boolean isDeleted = false;
+
     @OneToOne(fetch = FetchType.LAZY,
-              orphanRemoval = false,
+              cascade = CascadeType.ALL,
               mappedBy = "assetManagementForm")
-//    @JoinColumn(name = "assetMgtID",
-//            foreignKey = @ForeignKey(name = "assetMgtID"))
     private Assessment assessment;
 
     @OneToOne(fetch = FetchType.LAZY,
-              orphanRemoval = false,
+              cascade = CascadeType.ALL,
               mappedBy = "assetManagementForm")
-//    @JoinColumn(name = "assetMgtID",
-//            foreignKey = @ForeignKey(name = "assetMgtID"))
     private Management management;
 
     @OneToOne(fetch = FetchType.LAZY,
               cascade = CascadeType.ALL,
-              orphanRemoval = false,
               mappedBy = "assetManagementForm")
-//    @JoinColumn(name = "assetMgtID",
-//                foreignKey = @ForeignKey(name = "assetMgtID"))
     private Disposition disposition;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patientID")
     @JsonBackReference
     private Patient patient;
 
@@ -69,15 +69,12 @@ public class AssetManagementForm
         this.disposition = disposition;
     }
 
-//    public AssetManagementForm(Integer assetMgtID, LocalDate dateCreated, LocalDate dateUpdated, Assessment assessment, Management management, Disposition disposition, Patient patient) {
-//        this.assetMgtID = assetMgtID;
-//        this.dateCreated = dateCreated;
-//        this.dateUpdated = dateUpdated;
-//        this.assessment = assessment;
-//        this.management = management;
-//        this.disposition = disposition;
-//        this.patient = patient;
-//    }
+    public AssetManagementForm(Integer assetMgtID, LocalDate dateCreated, LocalDate dateUpdated, Boolean isDeleted) {
+        this.assetMgtID = assetMgtID;
+        this.dateCreated = dateCreated;
+        this.dateUpdated = dateUpdated;
+        this.isDeleted = isDeleted;
+    }
 
     public Integer getAssetMgtID() {
         return assetMgtID;
@@ -101,6 +98,14 @@ public class AssetManagementForm
 
     public void setDateUpdated(LocalDate dateUpdated) {
         this.dateUpdated = dateUpdated;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 
     public Assessment getAssessment() {

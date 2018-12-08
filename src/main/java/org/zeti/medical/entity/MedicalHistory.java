@@ -2,6 +2,7 @@ package org.zeti.medical.entity;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 @Table(name = "medical_history")
 @DynamicInsert
 @DynamicUpdate
+@Where(clause = "is_deleted = false")
 public class MedicalHistory implements Serializable
 {
     @Id
@@ -50,8 +52,13 @@ public class MedicalHistory implements Serializable
             length = 100)
     private String tetToxHistory;
 
+    @Column(name = "isDeleted",
+            nullable = false)
+    private Boolean isDeleted = false;
+
     @OneToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+              cascade = CascadeType.ALL)
+    @JoinColumn(name = "patientID")
     private Patient patient;
 
     public MedicalHistory() {
@@ -130,6 +137,14 @@ public class MedicalHistory implements Serializable
 
     public void setTetToxHistory(String tetToxHistory) {
         this.tetToxHistory = tetToxHistory;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 
     public Patient getPatient() {

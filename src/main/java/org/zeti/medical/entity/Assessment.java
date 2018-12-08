@@ -3,6 +3,7 @@ package org.zeti.medical.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 @Table(name = "assessment")
 @DynamicInsert
 @DynamicUpdate
+@Where(clause = "is_deleted = false")
 public class Assessment implements Serializable
 {
 
@@ -61,7 +63,13 @@ public class Assessment implements Serializable
     @Size(max = 512, message = "{validation.note.number.size}")
     private String note;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @Column(name = "isDeleted",
+            nullable = false)
+    private Boolean isDeleted = false;
+
+    @OneToOne(fetch = FetchType.LAZY,
+              cascade = CascadeType.ALL)
+    @JoinColumn(name = "assetMgtID")
     private AssetManagementForm assetManagementForm;
 
     public Assessment() {
@@ -149,6 +157,14 @@ public class Assessment implements Serializable
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 
     public AssetManagementForm getAssetManagementForm() {
