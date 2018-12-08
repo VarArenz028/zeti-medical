@@ -9,10 +9,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "action_plan")
+@Table(name = "ActionPlan")
 @DynamicInsert
 @DynamicUpdate
-@Where(clause = "is_deleted = false")
+@Where(clause = "isDeleted = false")
 public class ActionPlan implements Serializable
 {
     @Id

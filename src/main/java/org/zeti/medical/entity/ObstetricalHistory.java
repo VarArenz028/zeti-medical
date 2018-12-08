@@ -9,10 +9,10 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "obstetrical_history")
+@Table(name = "ObstetricalHistory")
 @DynamicInsert
 @DynamicUpdate
-@Where(clause = "is_deleted = false")
+@Where(clause = "isDeleted = false")
 public class ObstetricalHistory implements Serializable
 {
 

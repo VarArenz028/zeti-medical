@@ -11,10 +11,10 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Table(name = "management")
+@Table(name = "Management")
 @DynamicInsert
 @DynamicUpdate
-@Where(clause = "is_deleted = false")
+@Where(clause = "isDeleted = false")
 public class Management implements Serializable
 {
     @Id

@@ -8,10 +8,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "medical_history")
+@Table(name = "MedicalHistory")
 @DynamicInsert
 @DynamicUpdate
-@Where(clause = "is_deleted = false")
+@Where(clause = "isDeleted = false")
 public class MedicalHistory implements Serializable
 {
     @Id

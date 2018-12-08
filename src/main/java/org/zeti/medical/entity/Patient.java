@@ -24,7 +24,7 @@ import java.util.Set;
 @DynamicUpdate
 @JsonRootName("Patient")
 @JsonFilter("PatientFilter")
-@Where(clause = "is_deleted = false")
+@Where(clause = "isDeleted = false")
 public class Patient extends Person implements Serializable
 {
 

@@ -12,10 +12,10 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "asset_management_form")
+@Table(name = "AssetManagementForm")
 @DynamicInsert
 @DynamicUpdate
-@Where(clause = "is_deleted = false")
+@Where(clause = "isDeleted = false")
 public class AssetManagementForm
 {
     @Id
