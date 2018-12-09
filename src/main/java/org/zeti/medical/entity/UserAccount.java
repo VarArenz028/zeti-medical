@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +20,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import javax.validation.GroupSequence;
 import javax.validation.Valid;
@@ -30,7 +33,6 @@ import java.time.LocalDate;
 @Table(name = "UserAccount")
 @DynamicInsert
 @DynamicUpdate
-@Where(clause = "isDeleted = false")
 @JsonPropertyOrder({"userID", "username", "role", "active", "isDeleted", "dateCreated", "dateUpdated",
                     "lastName", "firstName", "middleInitial", "age", "birthDate"})
 public class UserAccount extends Person implements Serializable
@@ -70,11 +72,6 @@ public class UserAccount extends Person implements Serializable
     @NotNull(message = "${validation.field.null}")
     private Boolean active = true;
 
-    @Column(name = "isDeleted",
-            nullable = false)
-    @NotNull(message = "${validation.field.null}")
-    private Boolean isDeleted = false;
-
     @Column(name = "dateCreated",
             updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
@@ -99,7 +96,6 @@ public class UserAccount extends Person implements Serializable
         this.username = username;
         this.role = role;
         this.active = active;
-        this.isDeleted = isDeleted;
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
     }
@@ -152,14 +148,6 @@ public class UserAccount extends Person implements Serializable
 
     public void setActive(Boolean active) {
         this.active = active;
-    }
-
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
     }
 
     public LocalDate getDateCreated() {

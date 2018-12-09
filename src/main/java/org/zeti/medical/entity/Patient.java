@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -76,14 +77,12 @@ public class Patient extends Person implements Serializable
     private String edc;
 
     @Column(name = "dateCreated",
-            nullable = false,
             updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     @CreationTimestamp
     private LocalDate dateCreated;
 
-    @Column(name = "dateUpdated",
-            nullable = false)
+    @Column(name = "dateUpdated")
     @JsonFormat(pattern = "yyyy-MM-dd", shape = JsonFormat.Shape.STRING)
     @UpdateTimestamp
     private LocalDate dateUpdated;

@@ -7,10 +7,15 @@ import java.util.List;
 public interface UserAccountCustomRepository
 {
 
+    Boolean isUsernameExist(String username);
+
+    Boolean isPasswordExist(String password);
+
     // Fields: UserID, Username, Password, Role, Active, IsDeleted, DateCreated, DateUpdated
     List<UserAccount> findAllUser();
 
     // Fields: UserID, Username, Password, Role, Active, IsDeleted, DateCreated, DateUpdated
     // Extends Person
     List<UserAccount> findAllUserDetails();
+
 }

@@ -7,13 +7,17 @@ import java.util.List;
 public interface UserAccountServices
 {
 
-    boolean isPasswordExist(String password);
+    Boolean isPasswordExist(String password);
 
-    boolean isUsernameExist(String username);
+    Boolean isUsernameExist(String username);
 
     List<UserAccount> findAllUser();
 
     List<UserAccount> findAllUserDetails();
 
     void saveOrUpdate(UserAccount userAccount);
+
+    void deactivateUser(Integer userID);
+
+    void deleteByID(Integer userID);
 }

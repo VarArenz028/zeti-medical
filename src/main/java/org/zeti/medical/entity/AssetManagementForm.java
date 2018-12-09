@@ -52,6 +52,11 @@ public class AssetManagementForm
               mappedBy = "assetManagementForm")
     private Disposition disposition;
 
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "assetManagementForm")
+    private ConsultationHistory consultationHistory;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patientID")
     @JsonBackReference
@@ -130,6 +135,14 @@ public class AssetManagementForm
 
     public void setDisposition(Disposition disposition) {
         this.disposition = disposition;
+    }
+
+    public ConsultationHistory getConsultationHistory() {
+        return consultationHistory;
+    }
+
+    public void setConsultationHistory(ConsultationHistory consultationHistory) {
+        this.consultationHistory = consultationHistory;
     }
 
     public Patient getPatient() {

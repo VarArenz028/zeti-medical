@@ -43,6 +43,9 @@ public class PatientServicesImpl implements PatientServices
     private DispositionRepository dispositionRepository;
 
     @Autowired
+    private ConsultationHistoryRepository consultationHistoryRepository;
+
+    @Autowired
     private JsonFilter jsonFilter;
 
     @Autowired
@@ -82,6 +85,8 @@ public class PatientServicesImpl implements PatientServices
         Assessment assessment = assetManagementForm.getAssessment();
         Management management = assetManagementForm.getManagement();
         Disposition disposition = assetManagementForm.getDisposition();
+        ConsultationHistory consultationHistory = assetManagementForm.getConsultationHistory();
+
 
         assetManagementForm.setPatient(patient);
         assetManagementFormRepository.save(assetManagementForm);
@@ -89,9 +94,11 @@ public class PatientServicesImpl implements PatientServices
         assessment.setAssetManagementForm(assetManagementForm);
         management.setAssetManagementForm(assetManagementForm);
         disposition.setAssetManagementForm(assetManagementForm);
+        consultationHistory.setAssetManagementForm(assetManagementForm);
 
         assessmentRepository.save(assessment);
         managementRepository.save(management);
         dispositionRepository.save(disposition);
+        consultationHistoryRepository.save(consultationHistory);
     }
 }

@@ -65,7 +65,6 @@ public class PatientRepositoryImpl extends AbstractEntityManager implements Pati
                 .setHint("javax.persistence.loadgraph", entityGraph);
 
         List<Patient> patients = typedQuery.getResultList();
-
         if(patients.isEmpty())
         {
             throw new ResourceNotFound("No result found");

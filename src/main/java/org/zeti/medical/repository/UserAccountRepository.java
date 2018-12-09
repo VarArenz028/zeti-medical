@@ -9,8 +9,4 @@ public interface UserAccountRepository extends JpaRepository<UserAccount, Intege
 {
     @Query(value = "SELECT u.password from UserAccount u where u.password = (:password)")
     String findPasswordByPassword(@Param(value = "password") String password);
-
-    boolean existsByUsername(String username);
-
-    boolean existsByPassword(String password);
 }

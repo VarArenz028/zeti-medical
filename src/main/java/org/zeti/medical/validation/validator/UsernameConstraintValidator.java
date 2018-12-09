@@ -18,7 +18,6 @@ public class UsernameConstraintValidator implements ConstraintValidator<ValidUse
     @Override
     public boolean isValid(String username, ConstraintValidatorContext context)
     {
-        System.out.println("The username is " + username);
         return username != null && !userAccountServices.isUsernameExist(username);
     }
 }
