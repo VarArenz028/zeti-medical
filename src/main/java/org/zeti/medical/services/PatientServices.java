@@ -14,6 +14,8 @@ public interface PatientServices
     // List the Patient Entity without its children entities
     ResponseEntity<?> findAllPatient();
 
+    ResponseEntity<?> findPatientAndObstetricalRecord();
+
     void saveAndUpdate(Patient patient);
 
     void addAssessmentMgtForm(Integer patientID, AssetManagementForm assetManagementForm);

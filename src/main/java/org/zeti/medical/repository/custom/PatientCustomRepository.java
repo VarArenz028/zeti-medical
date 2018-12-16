@@ -11,4 +11,6 @@ public interface PatientCustomRepository
     Patient findByPatientID(Integer patientID);
 
     List<Patient> findAllPatient();
+
+    List<Patient> findPatientAndObstetricalRecord();
 }

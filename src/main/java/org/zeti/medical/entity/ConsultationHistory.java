@@ -1,5 +1,6 @@
 package org.zeti.medical.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -60,6 +61,7 @@ public class ConsultationHistory
     @OneToOne(fetch = FetchType.LAZY,
               cascade = CascadeType.ALL)
     @JoinColumn(name = "assetMgtID")
+    @JsonBackReference
     private AssetManagementForm assetManagementForm;
 
     public ConsultationHistory() {

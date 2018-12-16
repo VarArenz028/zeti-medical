@@ -1,5 +1,6 @@
 package org.zeti.medical.services;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.zeti.medical.entity.UserAccount;
 
 import java.util.List;
@@ -15,9 +16,13 @@ public interface UserAccountServices
 
     List<UserAccount> findAllUserDetails();
 
+    List<UserAccount> findAllInactiveUser();
+
     void saveOrUpdate(UserAccount userAccount);
 
     void deactivateUser(Integer userID);
 
     void deleteByID(Integer userID);
+
+    void deleteAllInactiveUser();
 }

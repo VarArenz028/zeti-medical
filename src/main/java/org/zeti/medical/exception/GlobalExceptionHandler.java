@@ -51,6 +51,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ResourceExist.class)
+    public final ResponseEntity<ErrorDetails> resourceConfict(ResourceExist e)
+    {
+        ErrorDetails details = new ErrorDetails(LocalDateTime.now(),
+                e.getMessage(),
+                "Conflict",
+                HttpStatus.CONFLICT.value());
+        return new ResponseEntity<>(details, HttpStatus.CONFLICT);
+    }
+
     // gets all validation details
     private List<ValidationDetail> validationDetails(MethodArgumentNotValidException e)
     {

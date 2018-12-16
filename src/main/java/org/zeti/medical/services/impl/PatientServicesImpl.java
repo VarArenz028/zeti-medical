@@ -10,7 +10,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.zeti.medical.entity.*;
 import org.zeti.medical.json.field.PatientView;
@@ -24,7 +26,7 @@ import java.util.Map;
 // Business Logic Layer
 
 @Service("patientServices")
-@Transactional
+@Transactional(isolation = Isolation.READ_COMMITTED)
 public class PatientServicesImpl implements PatientServices
 {
 
@@ -68,6 +70,12 @@ public class PatientServicesImpl implements PatientServices
         MappingJacksonValue jacksonValue = jsonFilter.filterResponse("PatientFilter",
                     patientView.getPatientFields(), patientRepository.findAllPatient());
         return new ResponseEntity<>(jacksonValue, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> findPatientAndObstetricalRecord()
+    {
+        return ResponseEntity.ok(patientRepository.findPatientAndObstetricalRecord());
     }
 
     // can use in saving and updating

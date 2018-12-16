@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 
@@ -24,8 +26,6 @@ import java.util.Set;
 @DynamicInsert
 @DynamicUpdate
 @JsonRootName("Patient")
-@JsonFilter("PatientFilter")
-@Where(clause = "isDeleted = false")
 public class Patient extends Person implements Serializable
 {
 
@@ -102,10 +102,17 @@ public class Patient extends Person implements Serializable
               mappedBy = "patient")
     private MedicalHistory medicalHistory;
 
-    @OneToMany(fetch = FetchType.LAZY,
+    // fix this in future. make it LAZY
+    @OneToMany(fetch = FetchType.EAGER,
                mappedBy = "patient")
     @JsonManagedReference
-    private Set<AssetManagementForm> assetManagementForms = new LinkedHashSet<>();
+    private Set<AssetManagementForm> assetManagementForms;
+
+    @OneToOne(cascade = CascadeType.ALL,
+              fetch = FetchType.LAZY,
+              mappedBy = "patient")
+    @JsonManagedReference
+    private ObstetricalRecord obstetricalRecord;
 
 
     public Patient() {
@@ -143,6 +150,7 @@ public class Patient extends Person implements Serializable
         this.assetManagementForms = assetManagementForms;
     }
 
+    // Patient and assetManagementForms
     public Patient(String lastName, String firstName, String middleInitial, Integer age, LocalDate birthDate, Integer patientID, String contactNumber, String civilStatus, String religion, String address, String eduAttainment, String lmp, String aog, String edc, LocalDate dateCreated, LocalDate dateUpdated, ObstetricalHistory obstetricalHistory, MedicalHistory medicalHistory, Set<AssetManagementForm> assetManagementForms) {
         super(lastName, firstName, middleInitial, age, birthDate);
         this.patientID = patientID;
@@ -159,6 +167,23 @@ public class Patient extends Person implements Serializable
         this.obstetricalHistory = obstetricalHistory;
         this.medicalHistory = medicalHistory;
         this.assetManagementForms = assetManagementForms;
+    }
+
+    // Patient and ObstetricalRecord
+    public Patient(@Size(min = 5, max = 80, message = "{validation.name.number.size}") String lastName, @Size(min = 5, max = 80, message = "{validation.name.number.size}") String firstName, Integer patientID, @Size(max = 30, message = "{validation.contact.number.size}") String contactNumber, @Size(max = 20, message = "{validation.civil.number.size}") String civilStatus, @Size(max = 80, message = "{validation.religion.number.size}") String religion, @Size(max = 150, message = "{validation.address.number.size}") String address, @Size(max = 100, message = "{validation.education.number.size}") String eduAttainment, @Size(max = 100, message = "{validation.lmp.number.size}") String lmp, @Size(max = 100, message = "{validation.education.number.size}") String aog, @Size(max = 100, message = "{validation.education.number.size}") String edc, LocalDate dateCreated, LocalDate dateUpdated, ObstetricalRecord obstetricalRecord) {
+        super(lastName, firstName);
+        this.patientID = patientID;
+        this.contactNumber = contactNumber;
+        this.civilStatus = civilStatus;
+        this.religion = religion;
+        this.address = address;
+        this.eduAttainment = eduAttainment;
+        this.lmp = lmp;
+        this.aog = aog;
+        this.edc = edc;
+        this.dateCreated = dateCreated;
+        this.dateUpdated = dateUpdated;
+        this.obstetricalRecord = obstetricalRecord;
     }
 
     public Integer getPatientID() {
@@ -280,4 +305,13 @@ public class Patient extends Person implements Serializable
     public void setAssetManagementForms(Set<AssetManagementForm> assetManagementForms) {
         this.assetManagementForms = assetManagementForms;
     }
+
+    public ObstetricalRecord getObstetricalRecord() {
+        return obstetricalRecord;
+    }
+
+    public void setObstetricalRecord(ObstetricalRecord obstetricalRecord) {
+        this.obstetricalRecord = obstetricalRecord;
+    }
+
 }

@@ -46,6 +46,12 @@ public class UserAccountServicesImpl implements UserAccountServices
     }
 
     @Override
+    public List<UserAccount> findAllInactiveUser()
+    {
+        return userAccountRepository.findAllInactiveUser();
+    }
+
+    @Override
     public void saveOrUpdate(UserAccount userAccount)
     {
         userAccountRepository.save(userAccount);
@@ -69,6 +75,13 @@ public class UserAccountServicesImpl implements UserAccountServices
     public void deleteByID(Integer userID)
     {
         userAccountRepository.deleteById(userID);
+    }
+
+    @Override
+    public void deleteAllInactiveUser()
+    {
+        List<UserAccount> userAccounts = userAccountRepository.findAllInactiveUser();
+        userAccountRepository.deleteAll(userAccounts);
     }
 
 

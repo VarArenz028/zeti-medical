@@ -35,6 +35,7 @@ public class Management implements Serializable
     @OneToOne(fetch = FetchType.LAZY,
               cascade = CascadeType.ALL)
     @JoinColumn(name = "assetMgtID")
+    @JsonBackReference
     private AssetManagementForm assetManagementForm;
 
     public Management() {

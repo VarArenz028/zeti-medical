@@ -5,6 +5,7 @@ import org.zeti.medical.exception.ResourceNotFound;
 import org.zeti.medical.repository.AbstractEntityManager;
 import org.zeti.medical.repository.custom.UserAccountCustomRepository;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -70,6 +71,39 @@ public class UserAccountRepositoryImpl extends AbstractEntityManager
     }
 
     @Override
+    public UserAccount getUserAuthDetailsByUsername(String username)
+    {
+        UserAccount userAccount = null;
+        EntityGraph<UserAccount> entityGraph = entityManager().createEntityGraph(UserAccount.class);
+        CriteriaQuery<UserAccount> query = criteriaBuilder().createQuery(UserAccount.class);
+        Root<UserAccount> root = query.from(UserAccount.class);
+        query.select(criteriaBuilder().construct(
+                UserAccount.class,
+                root.get("userID"),
+                root.get("username"),
+                root.get("password"),
+                root.get("role")));
+
+        if(username != null)
+        {
+            query.where(criteriaBuilder().equal(root.get("username"), username));
+        }
+
+        TypedQuery<UserAccount> typedQuery = entityManager().createQuery(query);
+        typedQuery.setHint("javax.persistence.loadgraph", entityGraph);
+        try
+        {
+            userAccount = typedQuery.getSingleResult();
+        }
+        catch(NoResultException e)
+        {
+            throw new ResourceNotFound("User not found with username \'" + username + "\'");
+        }
+
+        return userAccount;
+    }
+
+    @Override
     public List<UserAccount> findAllUser()
     {
         TypedQuery<UserAccount> typedQuery = entityManager()
@@ -98,6 +132,27 @@ public class UserAccountRepositoryImpl extends AbstractEntityManager
         if(userAccounts.isEmpty())
         {
             throw new ResourceNotFound("No users found");
+        }
+
+        return userAccounts;
+    }
+
+    // get all inactive account
+    @Override
+    public List<UserAccount> findAllInactiveUser()
+    {
+        CriteriaQuery<UserAccount> query = criteriaBuilder().createQuery(UserAccount.class);
+        Root<UserAccount> root = query.from(UserAccount.class);
+        query.select(criteriaBuilder().construct(UserAccount.class,
+                root.get("lastName"), root.get("firstName"), root.get("userID"), root.get("username"), root.get("role")));
+        query.where(criteriaBuilder().equal(root.get("active"), false));
+        TypedQuery<UserAccount> typedQuery = entityManager().createQuery(query);
+
+        List<UserAccount> userAccounts = typedQuery.getResultList();
+
+        if(userAccounts.isEmpty())
+        {
+            throw new ResourceNotFound("No inactive accounts");
         }
 
         return userAccounts;

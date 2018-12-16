@@ -11,11 +11,15 @@ public interface UserAccountCustomRepository
 
     Boolean isPasswordExist(String password);
 
+    UserAccount getUserAuthDetailsByUsername(String username);
+
     // Fields: UserID, Username, Password, Role, Active, IsDeleted, DateCreated, DateUpdated
     List<UserAccount> findAllUser();
 
     // Fields: UserID, Username, Password, Role, Active, IsDeleted, DateCreated, DateUpdated
     // Extends Person
     List<UserAccount> findAllUserDetails();
+
+    List<UserAccount> findAllInactiveUser();
 
 }

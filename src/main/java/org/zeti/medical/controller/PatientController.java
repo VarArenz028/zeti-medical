@@ -2,11 +2,14 @@ package org.zeti.medical.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.zeti.medical.entity.ActionPlan;
 import org.zeti.medical.entity.AssetManagementForm;
 import org.zeti.medical.entity.Management;
+import org.zeti.medical.entity.ObstetricalRecord;
 import org.zeti.medical.entity.Patient;
 import org.zeti.medical.json.filter.JsonFilter;
 import org.zeti.medical.json.field.PatientView;
@@ -23,6 +26,7 @@ import java.util.List;
 
 // Entry point or Controller layer
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/zeti")
 public class PatientController
@@ -38,10 +42,18 @@ public class PatientController
     private JsonFilter jsonFilter;
 
     // accessible by Admin, Midwife and OB
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/patients")
     public ResponseEntity<?> getPatients()
     {
         return patientServices.findAllPatient();
+    }
+
+    @GetMapping("/patients-obstetrical-records")
+    public ResponseEntity<?> getPatientAndObstetricalRecord()
+    {
+        return patientServices.findPatientAndObstetricalRecord();
     }
 
     // accessible by Admin, Midwife and OB
@@ -55,8 +67,10 @@ public class PatientController
     }
 
     // accessible by Admin, Midwife and OB
+    // username will use to get the information who create the assessment-management-form
     @PostMapping("/assessment-management-form")
     public ResponseEntity addAssessmentMgtForm(@RequestParam("patientID") Integer patientID,
+                                               @RequestParam("username") String username,
                                                @RequestBody @Valid AssetManagementForm assetMgtForm)
     {
         patientServices.addAssessmentMgtForm(patientID, assetMgtForm);
@@ -81,4 +95,6 @@ public class PatientController
         patientServices.saveAndUpdate(patient);
         return ResponseEntity.ok("Successfully Updated");
     }
+
+
 }

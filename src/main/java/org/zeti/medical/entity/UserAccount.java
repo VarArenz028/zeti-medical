@@ -3,6 +3,7 @@ package org.zeti.medical.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.SQLUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.Where;
 import org.springframework.validation.annotation.Validated;
+import org.zeti.medical.json.view.UserView;
 import org.zeti.medical.validation.ValidPassword;
 import org.zeti.medical.validation.ValidUsername;
 import org.zeti.medical.validation.group.UserAccountGroup;
@@ -42,6 +44,7 @@ public class UserAccount extends Person implements Serializable
     @Column(name = "userID",
             nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(UserView.inactive.class)
     private Integer userID;
 
     @Column(name = "username",
@@ -50,12 +53,13 @@ public class UserAccount extends Person implements Serializable
     @Size(max = 50, message = "Maximum size is 50")
     @NotNull(message = "${validation.field.null}")
     @ValidUsername(message = "Username already exist")
+    @JsonView(UserView.inactive.class)
     private String username;
 
     @Column(name = "password",
             nullable = false,
-            length = 50)
-    @Size(max = 50, message = "Maximum size is 50")
+            length = 512)
+    @Size(max = 512, message = "Maximum size is 512")
     @NotNull(message = "${validation.field.null}")
     @ValidPassword(message = "Password already exist")
     private String password;
@@ -65,6 +69,7 @@ public class UserAccount extends Person implements Serializable
             length = 15)
     @Size(max = 15, message = "Maximum size is 15")
     @NotNull(message = "${validation.field.null}")
+    @JsonView(UserView.inactive.class)
     private String role;
 
     @Column(name = "active",
@@ -86,7 +91,22 @@ public class UserAccount extends Person implements Serializable
     public UserAccount() {
     }
 
-    /*
+    // Authentication constructor
+    public UserAccount(Integer userID, @Size(max = 50, message = "Maximum size is 50") @NotNull(message = "${validation.field.null}") String username, @Size(max = 50, message = "Maximum size is 50") @NotNull(message = "${validation.field.null}") String password, @Size(max = 15, message = "Maximum size is 15") @NotNull(message = "${validation.field.null}") String role) {
+        this.userID = userID;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
+    public UserAccount(String lastName, String firstName, Integer userID, @Size(max = 50, message = "Maximum size is 50") @NotNull(message = "${validation.field.null}") String username, @Size(max = 15, message = "Maximum size is 15") @NotNull(message = "${validation.field.null}") String role) {
+        super(lastName, firstName);
+        this.userID = userID;
+        this.username = username;
+        this.role = role;
+    }
+
+/*
         Field excluded
             password
      */

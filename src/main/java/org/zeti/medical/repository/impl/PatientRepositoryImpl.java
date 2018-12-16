@@ -10,6 +10,9 @@ import javax.persistence.Query;
 import javax.persistence.Subgraph;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Fetch;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +66,34 @@ public class PatientRepositoryImpl extends AbstractEntityManager implements Pati
         TypedQuery typedQuery = entityManager()
                 .createQuery(criteriaQuery)
                 .setHint("javax.persistence.loadgraph", entityGraph);
+
+        List<Patient> patients = typedQuery.getResultList();
+        if(patients.isEmpty())
+        {
+            throw new ResourceNotFound("No result found");
+        }
+
+        return patients;
+    }
+
+
+    // fix this
+    // fetch Patient and ObstetricalRecord
+
+    @Override
+    public List<Patient> findPatientAndObstetricalRecord()
+    {
+        CriteriaQuery<Patient> criteriaQuery = criteriaBuilder().createQuery(Patient.class);
+        Root<Patient> root = criteriaQuery.from(Patient.class);
+//        criteriaQuery.select(criteriaBuilder().construct(Patient.class, root.get("lastName"), root.get("firstName"),
+//                root.get("patientID"), root.get("contactNumber"), root.get("civilStatus"),
+//                root.get("religion"), root.get("address"), root.get("eduAttainment"),
+//                root.get("lmp"), root.get("aog"), root.get("edc"), root.get("dateCreated"),
+//                root.get("dateUpdated"), root.get("obstetricalRecord")));
+        Fetch<Patient, ObstetricalRecord> fetch = root.fetch("obstetricalRecord", JoinType.LEFT);
+        criteriaQuery.where(criteriaBuilder().equal(root.get("isDeleted"), false));
+        TypedQuery typedQuery = entityManager()
+                .createQuery(criteriaQuery);
 
         List<Patient> patients = typedQuery.getResultList();
         if(patients.isEmpty())

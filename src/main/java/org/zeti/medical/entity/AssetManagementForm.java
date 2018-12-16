@@ -2,6 +2,7 @@ package org.zeti.medical.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -40,21 +41,25 @@ public class AssetManagementForm
     @OneToOne(fetch = FetchType.LAZY,
               cascade = CascadeType.ALL,
               mappedBy = "assetManagementForm")
+    @JsonManagedReference
     private Assessment assessment;
 
     @OneToOne(fetch = FetchType.LAZY,
               cascade = CascadeType.ALL,
               mappedBy = "assetManagementForm")
+    @JsonManagedReference
     private Management management;
 
     @OneToOne(fetch = FetchType.LAZY,
               cascade = CascadeType.ALL,
               mappedBy = "assetManagementForm")
+    @JsonManagedReference
     private Disposition disposition;
 
     @OneToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "assetManagementForm")
+    @JsonManagedReference
     private ConsultationHistory consultationHistory;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -70,6 +70,7 @@ public class Assessment implements Serializable
     @OneToOne(fetch = FetchType.LAZY,
               cascade = CascadeType.ALL)
     @JoinColumn(name = "assetMgtID")
+    @JsonBackReference
     private AssetManagementForm assetManagementForm;
 
     public Assessment() {

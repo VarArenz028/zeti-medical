@@ -2,6 +2,8 @@ package org.zeti.medical.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import org.zeti.medical.json.view.UserView;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -19,12 +21,14 @@ public abstract class Person implements Serializable
             nullable = false,
             length = 80)
     @Size(min = 5, max = 80, message = "{validation.name.number.size}")
+    @JsonView(UserView.inactive.class)
     private String lastName;
 
     @Column(name = "firstName",
             nullable = false,
             length = 80)
     @Size(min = 5, max = 80, message = "{validation.name.number.size}")
+    @JsonView(UserView.inactive.class)
     private String firstName;
 
     @Column(name = "middleInitial",
@@ -47,6 +51,11 @@ public abstract class Person implements Serializable
     private LocalDate birthDate;
 
     public Person() {
+    }
+
+    public Person(@Size(min = 5, max = 80, message = "{validation.name.number.size}") String lastName, @Size(min = 5, max = 80, message = "{validation.name.number.size}") String firstName) {
+        this.lastName = lastName;
+        this.firstName = firstName;
     }
 
     public Person(String lastName, String firstName, String middleInitial, Integer age, LocalDate birthDate) {
